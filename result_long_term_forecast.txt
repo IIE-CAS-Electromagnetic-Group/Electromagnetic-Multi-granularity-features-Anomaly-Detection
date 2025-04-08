@@ -1,0 +1,61 @@
+long_term_forecast_GezhoubaPred_10_3_Transformer_SignalCoarsePred_ftM_sl10_ll1_pl3_dm128_nh8_el2_dl1_df128_fc3_ebtimeF_dtTrue_'Exp'_0  
+mse:0.8694305419921875, mae:0.7155359387397766
+
+long_term_forecast_GezhoubaPred_10_3_Transformer_SignalCoarsePred_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_'Exp'_0  
+mse:0.1290101408958435, mae:0.23917771875858307
+
+long_term_forecast_GezhoubaPred_10_3_Transformer_SignalCoarsePred_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_'Exp'_0  
+mse:0.04177386313676834, mae:0.1297311782836914
+
+long_term_forecast_GezhoubaPred_10_3_Transformer_SignalCoarsePred_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_'Exp'_0  
+mse:0.04177386313676834, mae:0.1297311782836914
+
+long_term_forecast_GezhoubaPred_10_3_Transformer_SignalCoarsePred_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_'Exp'_0  
+mse:0.04177386313676834, mae:0.1297311782836914
+
+long_term_forecast_GezhoubaPred_10_3_Transformer_SignalCoarsePred_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_'Exp'_0  
+mse:0.04177386313676834, mae:0.1297311782836914
+
+long_term_forecast_GezhoubaPred_10_3_Transformer_SignalCoarsePred_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_'Exp'_0  
+mse:0.04177386313676834, mae:0.1297311782836914
+
+long_term_forecast_GezhoubaPred_10_3_Transformer_SignalCoarsePred_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_'Exp'_0  
+time.struct_time(tm_year=2025, tm_mon=2, tm_mday=19, tm_hour=18, tm_min=56, tm_sec=47, tm_wday=2, tm_yday=50, tm_isdst=0)  
+mse:0.04177386313676834, mae:0.1297311782836914
+
+long_term_forecast_GezhoubaPred_10_3_Transformer_SignalCoarsePred_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_'Exp'_0  
+Wed Feb 19 18:59:58 2025  
+mse:0.04177386313676834, mae:0.1297311782836914
+
+long_term_forecast_GezhoubaPred_10_3_Transformer_SignalCoarsePred_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_'Exp'_0  
+Wed Feb 19 19:01:25 2025  
+mse:0.04177386313676834, mae:0.1297311782836914
+
+long_term_forecast_GezhoubaPred_10_3_Transformer_SignalCoarsePred_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_'Exp'_0  
+Thu Feb 27 23:29:57 2025  
+mse:0.046675726771354675, mae:0.13439668715000153
+
+long_term_forecast_GezhoubaPred_10_3_Autoformer_SignalCoarsePred_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_'Exp'_0  
+Sun Mar 16 15:54:23 2025  
+mse:0.07737313956022263, mae:0.19565962255001068
+
+long_term_forecast_GezhoubaPred_3_25_Transformer_SignalCoarsePred_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_Exp_0  
+Tue Mar 25 17:26:37 2025  
+mse:0.046675726771354675, mae:0.13439668715000153
+
+long_term_forecast_GezhoubaPred_3_25_Transformer_SignalCoarsePred_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_Exp_0  
+Tue Mar 25 17:30:32 2025  
+mse:0.046675726771354675, mae:0.13439668715000153
+
+long_term_forecast_DiantiPred_3_25_Transformer_SignalCoarsePred_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_Exp_0  
+Tue Mar 25 23:00:25 2025  
+mse:0.6519696712493896, mae:0.5400252938270569
+
+long_term_forecast_GezhoubaPred_3_25_Transformer_SignalCoarsePred_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_Exp_0  
+Thu Mar 27 23:46:18 2025  
+mse:0.046675726771354675, mae:0.13439668715000153
+
+long_term_forecast_GezhoubaPred_3_25_Transformer_SignalCoarsePred_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_Exp_0  
+Sat Mar 29 14:48:45 2025  
+mse:0.8193570375442505, mae:0.6850058436393738
+
