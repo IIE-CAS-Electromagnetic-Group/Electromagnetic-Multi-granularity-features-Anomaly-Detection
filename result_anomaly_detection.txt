@@ -1549,3 +1549,57 @@ Threshold: 0.0023, Accuracy : 0.9939, Precision : 0.8351, Recall : 0.9985, F-sco
 anomaly_detection_DiantiSignalSeg_3_25_Transformer_SignalFineSeg_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_Exp_0  
 Threshold: 0.0012, Accuracy : 0.9905, Precision : 0.0782, Recall : 0.8167, F-score : 0.1428 
 
+anomaly_detection_DiantiSignalSeg_3_25_Transformer_SignalFineSeg_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_Exp_0  
+Threshold: 0.0016, Accuracy : 0.9934, Precision : 0.7230, Recall : 0.7266, F-score : 0.7248 
+
+anomaly_detection_DiantiSignalSeg_3_25_Transformer_SignalFineSeg_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_Exp_0  
+Threshold: 0.0016, Accuracy : 0.9934, Precision : 0.7230, Recall : 0.7266, F-score : 0.7248 
+
+anomaly_detection_DiantiSignalSeg_3_25_Transformer_SignalFineSeg_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_Exp_0  
+Threshold: 0.0016, Accuracy : 0.9934, Precision : 0.7230, Recall : 0.7266, F-score : 0.7248 
+
+anomaly_detection_DiantiSignalSeg_3_25_Transformer_SignalFineSeg_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_Exp_0  
+Threshold: 0.0016, Accuracy : 0.9934, Precision : 0.7230, Recall : 0.7266, F-score : 0.7248 
+
+anomaly_detection_DiantiSignalSeg_3_25_Transformer_SignalFineSeg_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_Exp_0  
+Threshold: 0.0016, Accuracy : 0.9934, Precision : 0.7230, Recall : 0.7266, F-score : 0.7248 
+
+anomaly_detection_DiantiSignalSeg_3_25_Transformer_SignalFineSeg_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_Exp_0  
+Threshold: 0.0016, Accuracy : 0.9934, Precision : 0.7230, Recall : 0.7266, F-score : 0.7248 
+
+anomaly_detection_DiantiSignalSeg_3_25_Transformer_SignalFineSeg_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_Exp_0  
+Threshold: 0.0016, Accuracy : 0.9934, Precision : 0.7230, Recall : 0.7266, F-score : 0.7248 
+
+anomaly_detection_DiantiSignalSeg_3_25_Transformer_SignalFineSeg_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_Exp_0  
+Threshold: 0.0016, Accuracy : 0.9934, Precision : 0.7230, Recall : 0.7266, F-score : 0.7248 
+
+anomaly_detection_DiantiSignalSeg_3_25_Transformer_SignalFineSeg_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_Exp_0  
+Threshold: 0.0016, Accuracy : 0.9934, Precision : 0.7230, Recall : 0.7266, F-score : 0.7248 
+
+anomaly_detection_DiantiSignalSeg_3_25_Transformer_SignalFineSeg_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_Exp_0  
+Threshold: 0.0016, Accuracy : 0.9934, Precision : 0.7230, Recall : 0.7266, F-score : 0.7248 
+
+anomaly_detection_DiantiSignalSeg_3_25_Transformer_SignalFineSeg_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_Exp_0  
+Threshold: 0.0016, Accuracy : 0.9934, Precision : 0.7230, Recall : 0.7266, F-score : 0.7248 
+
+anomaly_detection_DiantiSignalSeg_3_25_Transformer_SignalFineSeg_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_Exp_0  
+Threshold: 0.0016, Accuracy : 0.9934, Precision : 0.7230, Recall : 0.7266, F-score : 0.7248 
+
+anomaly_detection_DiantiSignalSeg_3_25_Transformer_SignalFineSeg_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_Exp_0  
+Threshold: 0.0016, Accuracy : 0.9934, Precision : 0.7230, Recall : 0.7266, F-score : 0.7248 
+
+anomaly_detection_DiantiSignalSeg_3_25_Transformer_SignalFineSeg_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_Exp_0  
+Threshold: 0.0016, Accuracy : 0.9934, Precision : 0.7230, Recall : 0.7266, F-score : 0.7248 
+
+anomaly_detection_GezhoubaSignalSeg_3_25_Transformer_SignalFineSeg_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_Exp_0  
+Threshold: 0.0254, Accuracy : 0.8822, Precision : 0.9998, Recall : 0.7296, F-score : 0.8436 
+
+anomaly_detection_GezhoubaSignalSeg_3_25_Transformer_SignalFineSeg_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_Exp_0  
+Threshold: 0.3734, Accuracy : 0.9291, Precision : 1.0000, Recall : 0.9180, F-score : 0.9573 
+
+anomaly_detection_GezhoubaSignalSeg_3_25_Transformer_SignalFineSeg_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_Exp_0  
+Threshold: 0.0224, Accuracy : 0.9229, Precision : 0.9998, Recall : 0.8193, F-score : 0.9006 
+
+anomaly_detection_GezhoubaSignalSeg_3_25_Transformer_SignalFineSeg_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_Exp_0  
+Threshold: 0.0224, Accuracy : 0.9229, Precision : 0.9998, Recall : 0.8193, F-score : 0.9006 
+

@@ -14,6 +14,8 @@ import os
 import time
 import warnings
 import numpy as np
+from utils.abnormal_visualization import *
+from datetime import datetime, timedelta
 
 warnings.filterwarnings('ignore')
 
@@ -366,6 +368,9 @@ class Exp_Anomaly_Detection(Exp_Basic):
         dict1 = {0: "功率异常", 1: "带宽异常", 2: "持续时间异常"}
         df_time = pd.read_csv(os.path.join(root_path, "fine_grained_data/test_fine_grained_data.csv"))
         rows=df_time.shape[0]
+
+        abnormal_detection_list=[]#用来后续可视化检测结果的
+        abnormal_flag=False
         # 异常类型判断
         anomaly_info = []
         for idx in anomaly_indices:
@@ -374,8 +379,35 @@ class Exp_Anomaly_Detection(Exp_Basic):
 
             if idx<rows:
                 print("Anomaly Position:" + df_time.iloc[idx, 0] + "  Anomaly Type:" + str(anomaly_type))
+                #可视化异常检测
+                if abnormal_flag==False:
+                    abnormal_flag=True
+                    start_time=datetime.strptime(df_time.iloc[idx, 0], '%Y-%m-%d %H:%M:%S')
+                    end_time=start_time+timedelta(seconds=2)
+                else:
+                    this_time=datetime.strptime(df_time.iloc[idx, 0], '%Y-%m-%d %H:%M:%S')
+                    if this_time>end_time:
+                        time_diff=this_time-end_time
+                        if time_diff<timedelta(seconds=30):
+                            end_time=this_time
+                        else:
+                            abnormal_element=[start_time.strftime('%Y-%m-%d %H:%M:%S'),
+                                              end_time.strftime('%Y-%m-%d %H:%M:%S'),
+                                              df_time.columns[1:10].tolist(),
+                                              "0"]
+                            abnormal_detection_list.append(abnormal_element)
+                            start_time=this_time
+                            end_time = start_time + timedelta(seconds=2)
+                    if this_time<end_time:
+                        time_diff = end_time-this_time
+                        if time_diff<timedelta(seconds=30):
+                            start_time=this_time
+                        else:
+                            pass
 
 
+
+        #print("abnormal_detection_list:" + str(abnormal_detection_list))
 
 
 
@@ -395,5 +427,16 @@ class Exp_Anomaly_Detection(Exp_Basic):
         f.write('\n')
         f.write('\n')
         f.close()
+
+        #标签异常可视化
+        csv_file=os.path.join(root_path, "fine_grained_data/test_fine_grained_data.csv")
+        abnormal_label_list=read_abnormal_label(os.path.join(root_path, "raw_data/abnormal_label/abnormal_process.csv"))
+        plot_waterfall_with_annotation(csv_file, abnormal_label_list)
+
+        # 预测异常可视化
+        csv_file = os.path.join(root_path, "fine_grained_data/test_fine_grained_data.csv")
+        
+        #abnormal_detection_list = []
+        plot_waterfall_with_annotation(csv_file, abnormal_detection_list)
         return
         pass

@@ -70,7 +70,7 @@ def get_dataset_parameter(root_path):
         dataset_parameter["voltage_threshold"] = -4
         dataset_parameter["communication_continuous_time_threshold"] = 6
         dataset_parameter["emission_continuous_time_threshold"] = 1
-        dataset_parameter["abnormal_num"] = 200
+        dataset_parameter["abnormal_num"] = 300
         dataset_parameter['m_n']=(3, 7)
         dataset_parameter['abnormal_start_and_end_time'] = ('00:30:00', '23:59:00')
         dataset_parameter["coarse_columns"] = ['date', 'communication_num', 'duration_time_min', 'duration_time_max',
@@ -127,12 +127,12 @@ def get_dataset_parameter(root_path):
         dataset_parameter["adjust_behavior_abnormal_time"] = False
         dataset_parameter['fine_addit_information'] = False
         dataset_parameter["voltage_threshold"] = -4
-        dataset_parameter["communication_continuous_time_threshold"] = 12
+        dataset_parameter["communication_continuous_time_threshold"] = 8
 
         dataset_parameter["emission_continuous_time_threshold"] = 1
-        dataset_parameter["abnormal_num"] = 120
+        dataset_parameter["abnormal_num"] = 50
         dataset_parameter['m_n'] = (3, 7)
-        dataset_parameter['abnormal_start_and_end_time'] = ('00:30:00', '23:59:00')
+        dataset_parameter['abnormal_start_and_end_time'] = ('00:30:00', '23:30:00')
         dataset_parameter["coarse_columns"] = ['date', 'communication_num', 'duration_time_min', 'duration_time_max',
                                                'duration_time_mean', 'duration_time_median', 'duration_time_sum',
                                                'emission_time_min', 'emission_time_max', 'emission_time_mean',
@@ -1409,6 +1409,8 @@ def process_test_fine_data(root_path, left_win_size, right_win_size, dataset_par
     if (os.path.exists(os.path.join(root_path, test_abnormal_signal_record_and_feature_file))):
         test_signal_record_and_feature_file_path = os.path.join(root_path, test_abnormal_signal_record_and_feature_file)
         signal_record_and_feature_df = pd.read_csv(test_signal_record_and_feature_file_path)
+        if (not os.path.exists(os.path.join(root_path, fine_abnormal_label_file))) or (not os.path.exists(os.path.join(root_path, test_abnormal_data_dir))):
+            generate_signal_abnormal_data(root_path, dataset_parameter)
     else:
         if (not os.path.exists(os.path.join(root_path, fine_abnormal_label_file))) or (not os.path.exists(os.path.join(root_path, test_abnormal_data_dir))):
             generate_signal_abnormal_data(root_path, dataset_parameter)

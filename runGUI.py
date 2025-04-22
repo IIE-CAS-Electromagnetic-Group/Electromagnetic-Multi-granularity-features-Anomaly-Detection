@@ -16,6 +16,9 @@ from exp.exp_anomaly_detection import Exp_Anomaly_Detection
 from exp.exp_classification import Exp_Classification
 from utils.print_args import print_args
 from LSTM_base_line import plot_all
+import shutil
+from data_provider.signal import *
+from utils.abnormal_visualization import *
 
 
 class RedirectText:
@@ -85,7 +88,8 @@ class App:
             #("batch_size", "Batch Size", "128"),
             #("anomaly_ratio", "Anomaly Ratio", "1"),
             #("patience", "Patience", "8"),
-            ("train_epochs", "Train Epochs", "50")
+            ("train_epochs", "Train Epochs", "50"),
+            ("abnormal_num", "Abnormal_num", "50")#异常注入
         ]
 
         self.entries = {}
@@ -157,8 +161,12 @@ class App:
         self.run_button.pack(side=tk.LEFT, padx=5)
 
         # 显示基线
-        self.jixian_button = ttk.Button(button_frame, text="Base Line", command=self.show_base_line)
+        self.jixian_button = ttk.Button(button_frame, text="Base Line", command=self.start_show_base_line)
         self.jixian_button.pack(side=tk.LEFT, padx=5)
+
+        # 异常注入
+        self.abnormal_injection_button = ttk.Button(button_frame, text="abnormal injection", command=self.start_abnormal_injection)
+        self.abnormal_injection_button.pack(side=tk.LEFT, padx=5)
 
     def create_output_frame(self):
         output_frame = ttk.LabelFrame(self.root, text="Output")
@@ -172,20 +180,32 @@ class App:
         sys.stdout = self.redirector
         sys.stderr = self.redirector
 
+    #---------------------开一个新线程------------------------
     def start_experiment(self):
         if not self.running:
             self.running = True
             self.run_button.pack_forget()
             self.jixian_button.pack_forget()
+            self.abnormal_injection_button.pack_forget()
             threading.Thread(target=self.run_experiment).start()
 
-    def show_base_line(self):
+    def start_show_base_line(self):
         if not self.running:
             self.running = True
             self.run_button.pack_forget()
             self.jixian_button.pack_forget()
-            threading.Thread(target=self.run_base_line()).start()
+            self.abnormal_injection_button.pack_forget()
+            threading.Thread(target=self.run_base_line).start()
 
+    def start_abnormal_injection(self):
+        if not self.running:
+            self.running = True
+            self.run_button.pack_forget()
+            self.jixian_button.pack_forget()
+            self.abnormal_injection_button.pack_forget()
+            threading.Thread(target=self.run_abnormal_injection).start()
+
+    # ------------------------------------------------
     def run_experiment(self):
         # 获取参数
         self.get_args()
@@ -304,6 +324,87 @@ class App:
         self.running = False
         self.run_button.pack(side=tk.LEFT, padx=5)
         self.jixian_button.pack(side=tk.LEFT, padx=5)
+        self.abnormal_injection_button.pack(side=tk.LEFT, padx=5)
+
+    def run_base_line(self):
+        plot_all(newdata_file=os.path.join(self.entries['root_path'].get(),"coarse_grained_data/test_coarse_grained_data.csv"))
+        # 运行结束后恢复按钮
+        self.running = False
+        self.run_button.pack(side=tk.LEFT, padx=5)
+        self.jixian_button.pack(side=tk.LEFT, padx=5)
+        self.abnormal_injection_button.pack(side=tk.LEFT, padx=5)
+
+    def run_abnormal_injection(self):
+        '''执行异常注入'''
+        #先把之前的异常标签什么的给删了
+        # 获取参数
+        self.get_args()
+
+        #删除之前的
+        try:
+            shutil.rmtree(os.path.join(self.args.root_path,"raw_data/test_abnormal_data"))
+        except FileNotFoundError:
+            pass
+        try:
+            shutil.rmtree(os.path.join(self.args.root_path, "raw_data/abnormal_label"))
+        except FileNotFoundError:
+            pass
+        '''
+        try:
+            shutil.rmtree(os.path.join(self.args.root_path, "raw_data/signal_record_and_feature"))
+        except FileNotFoundError:
+            pass'''
+
+
+        if self.args.data=="SignalCoarsePred":
+            try:
+                shutil.rmtree(os.path.join(self.args.root_path, "coarse_grained_data"))
+            except FileNotFoundError:
+                pass
+        else:
+            try:
+                shutil.rmtree(os.path.join(self.args.root_path, "fine_grained_data"))
+            except FileNotFoundError:
+                pass
+        print("Delete all previous abnormal data")
+        #重新生成
+        if self.args.data == "SignalCoarsePred":
+            dataset_parameter=get_dataset_parameter(self.args.root_path)
+            # 按照用户输入的abnormal_num进行生成
+            dataset_parameter["abnormal_num"]=int(self.entries['abnormal_num'].get())
+
+            process_test_coarse_data(self.args.root_path,
+                                     self.args.seq_len//2,
+                                     self.args.seq_len//2,
+                                     dataset_parameter)
+        else:
+            dataset_parameter = get_dataset_parameter(self.args.root_path)
+            dataset_parameter["abnormal_num"] = int(self.entries['abnormal_num'].get())
+            process_test_fine_data(self.args.root_path,
+                                     self.args.seq_len // 2,
+                                     self.args.seq_len // 2,
+                                     dataset_parameter)
+            pass
+        print("Abnormal injection complete......")
+        #异常可视化
+        if self.args.data == "SignalCoarsePred":
+            '''abnormal_label_list = read_abnormal_label(os.path.join(self.args.root_path, "raw_data/abnormal_label/abnormal_process.csv"))
+            plot_waterfall_with_annotation(os.path.join(self.args.root_path, "coarse_grained_data/test_coarse_grained_data.csv"),
+                                           abnormal_label_list)'''
+            pass
+        else:
+            abnormal_label_list = read_abnormal_label(
+                os.path.join(self.args.root_path, "raw_data/abnormal_label/abnormal_process.csv"))
+
+            plot_waterfall_with_annotation(
+                os.path.join(self.args.root_path, "fine_grained_data/test_fine_grained_data.csv"),
+                abnormal_label_list)
+        print("Abnormal visualization complete......")
+        # 运行结束后恢复按钮
+        self.running = False
+        self.run_button.pack(side=tk.LEFT, padx=5)
+        self.jixian_button.pack(side=tk.LEFT, padx=5)
+        self.abnormal_injection_button.pack(side=tk.LEFT, padx=5)
 
     def get_args(self):
         # 创建参数解析器
@@ -365,7 +466,6 @@ class App:
         parser.add_argument('--devices', type=str, default='0,1,2,3')
         parser.add_argument('--p_hidden_dims', type=int, nargs='+', default=[128, 128])
         parser.add_argument('--p_hidden_layers', type=int, default=2)
-
         # 解析参数
         self.args = parser.parse_args([
             '--task_name', self.entries['task_name'].get(),
@@ -428,12 +528,7 @@ class App:
             self.args.device_ids = [int(id_) for id_ in device_ids]
             self.args.gpu = self.args.device_ids[0]
 
-    def run_base_line(self):
-        plot_all(newdata_file=os.path.join(self.entries['root_path'].get(),"coarse_grained_data/test_coarse_grained_data.csv"))
-        # 运行结束后恢复按钮
-        self.running = False
-        self.run_button.pack(side=tk.LEFT, padx=5)
-        self.jixian_button.pack(side=tk.LEFT, padx=5)
+
 
 if __name__ == "__main__":
     multiprocessing.freeze_support()

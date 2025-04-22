@@ -1559,3 +1559,11 @@ long_term_forecast_GezhoubaPred_3_25_Transformer_SignalCoarsePred_ftM_sl10_ll1_p
 Tue Apr  1 00:06:22 2025  
 Threshold: 4.7375, Accuracy : 0.9701, Precision : 0.9500, Recall : 0.4634, F-score : 0.6230 
 
+long_term_forecast_GezhoubaPred_3_25_Transformer_SignalCoarsePred_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_Exp_0  
+Mon Apr 21 16:47:26 2025  
+Threshold: 4.7375, Accuracy : 0.9701, Precision : 0.9500, Recall : 0.4634, F-score : 0.6230 
+
+long_term_forecast_GezhoubaPred_3_25_Transformer_SignalCoarsePred_ftM_sl10_ll1_pl3_dm256_nh8_el2_dl1_df512_fc3_ebtimeF_dtTrue_Exp_0  
+Tue Apr 22 10:55:23 2025  
+Threshold: 231.1458, Accuracy : 0.5677, Precision : 0.9794, Recall : 0.2235, F-score : 0.3640 
+

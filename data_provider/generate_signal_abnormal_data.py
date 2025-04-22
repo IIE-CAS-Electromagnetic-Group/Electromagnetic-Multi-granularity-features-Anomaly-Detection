@@ -109,6 +109,44 @@ def get_middle_sublist(lst, length):
     return lst[start_index:end_index]
 
 
+def fill_missing_time_rows(df):
+    """
+    直接在输入的DataFrame上操作，补充缺失的时间行，将时间列作为索引，并使用前向填充方法填充缺失值
+
+    参数:
+    df: pandas.DataFrame
+        包含时间列和其他数据列的DataFrame
+
+    返回:
+    None
+        修改后的DataFrame直接存储在输入的df中
+    """
+    if len(df.columns) == 0:
+        return
+    # 获取原始列名
+    original_columns = df.columns.tolist()
+    # 获取时间列的名称（假设第一列是时间列）
+    time_column_name = original_columns[0]
+    # 检查时间列是否已为datetime类型，如果不是，则转换
+    if df[time_column_name].dtype != 'datetime64[ns]':
+        df[time_column_name] = pd.to_datetime(df[time_column_name], format='%Y-%m-%d %H:%M:%S')
+    # 获取时间范围
+    mintime = df[time_column_name].min()
+    maxtime = df[time_column_name].max()
+    # 创建完整的时间序列，间隔为1秒
+    full_time_range = pd.date_range(start=mintime, end=maxtime, freq='1s')
+    # 创建包含完整时间索引的DataFrame
+    full_time_df = pd.DataFrame({time_column_name: full_time_range})
+    # 合并原始数据和完整时间索引
+    df = pd.merge(full_time_df, df, on=time_column_name, how='left')
+    # 按时间排序
+    df = df.sort_values(by=time_column_name)
+    # 将NaN值填充为前一个有效值
+    df = df.fillna(method='ffill')
+    # 将NaN值填充为后一个有效值（防止开头有NaN）
+    df = df.fillna(method='bfill')
+    return df
+
 def write_abnormal_to_csv(abnormal_value_df, raw_data_dir,test_abnormal_data_dir_path,dataset_parameter):
     '''将异常数据写入原始数据文件，生成包含异常信号的测试数据集。
         参数：
@@ -127,14 +165,22 @@ def write_abnormal_to_csv(abnormal_value_df, raw_data_dir,test_abnormal_data_dir
         os.makedirs(os.path.dirname(save_file_path), exist_ok=True)
         df = pd.read_csv(file_path)# 读取原始数据文件
         print("    读取原始数据文件："+str(file_path))
+        fill_missing_time_rows(df)
+        print(df)
         df['date'] = pd.to_datetime(df['date'])# 转换日期列为datetime类型
+        mintime = df.iloc[0, 0]  # 获取最小时间
+        maxtime=df.iloc[-1,0]#获取最大时间（主要是给后面注入异常提供参考）
+
         cols = list(df.columns)
         cols.remove('date')# 获取非日期列（数据特征列）
         # mask=None
         # 遍历每一条异常配置
         for index, row in abnormal_value_df.iterrows():#Pandas 的 iterrows() 方法用于遍历 DataFrame 的每一行，返回索引和行数据的序列。
-            print("index:"+str(index))
+            print("\n\nindex:"+str(index))
             print("row:"+str(row))
+
+            print("mintime:" + str(mintime))
+            print("maxtime:" + str(maxtime))
 
             select_start_date, select_end_date = row['start_time'], row['end_time']
             bandwidth_key = row['bandwidth_key']
@@ -174,8 +220,10 @@ def write_abnormal_to_csv(abnormal_value_df, raw_data_dir,test_abnormal_data_dir
             else:
                 if(row['abnormal_class']=='time_abnormal'):# 替换型异常（用参考数据替换目标数据）
 
-                    power_values=df.loc[(df['date'] >= pd.to_datetime(row['refer_start_time'])) & (
-                                    df['date'] <= pd.to_datetime(row['refer_end_time'])), bandwidth_key].values
+                    '''power_values=df.loc[(df['date'] >= pd.to_datetime(row['refer_start_time'])) & (
+                                    df['date'] <= pd.to_datetime(row['refer_end_time'])), bandwidth_key].values'''
+                    power_values = df.loc[(df['date'] >= pd.to_datetime(select_start_date)) & (
+                            df['date'] <= pd.to_datetime(select_end_date)), bandwidth_key].values
                     print(power_values)
                     # 从数据框 df 中筛选出日期在 row['refer_start_time'] 和 row['refer_end_time'] 之间的数据，
                     # 并提取对应的 bandwidth_key 列的值，存储到 power_values 中
@@ -185,13 +233,19 @@ def write_abnormal_to_csv(abnormal_value_df, raw_data_dir,test_abnormal_data_dir
 
                     # 随机从指定范围内的行进行抽取（此处可能触发错误！）
                     new_power_values =power_values[np.random.choice(power_values.shape[0], size=row_num, replace=True)]
+                    #new_power_values = power_values[np.random.choice(power_values.shape[0], size=int((pd.to_datetime(select_end_date)-pd.to_datetime(select_start_date)).total_seconds())+1, replace=True)]
                     # 从 power_values 中随机抽取 row_num 个值，允许重复（replace=True），返回指定大小（row_num）的数组生成新的功率值数组 new_power_values
 
                     # df.loc[(df['date'] >= pd.to_datetime(select_start_date)) & (
                     #         df['date'] <= pd.to_datetime(select_end_date)), bandwidth_key] = power
-
-                    df.loc[(df['date'] >= pd.to_datetime(select_start_date)) & (
-                            df['date'] <= pd.to_datetime(select_end_date)), bandwidth_key] = new_power_values
+                    # 计算符合条件的行数
+                    condition = (df['date'] >= pd.to_datetime(select_start_date)) & (
+                                df['date'] <= pd.to_datetime(select_end_date))
+                    num_rows = np.sum(condition)
+                    df.loc[
+                        (df['date'] >= pd.to_datetime(select_start_date)) & (
+                            df['date'] <= pd.to_datetime(select_end_date)), bandwidth_key
+                    ] = new_power_values[:num_rows]
 
                 elif(row['abnormal_class']=='bandwidth_abnormal'):# 带宽异常（直接替换为固定值）
 
@@ -226,8 +280,10 @@ def write_abnormal_to_csv(abnormal_value_df, raw_data_dir,test_abnormal_data_dir
                     for file in matching_files:
                         if(refer_df is None):
                             refer_df=pd.read_csv(file)
+                            fill_missing_time_rows(refer_df)#确保时间连续无空值
                         else:
                             refer_df=pd.concat([refer_df,pd.read_csv(file)],ignore_index=True)
+                            fill_missing_time_rows(refer_df)  # 确保时间连续无空值
 
                     if(refer_df is not None):
                         refer_df['date'] = pd.to_datetime(refer_df['date'])
@@ -236,10 +292,26 @@ def write_abnormal_to_csv(abnormal_value_df, raw_data_dir,test_abnormal_data_dir
                         #         df['date'] <= pd.to_datetime(select_end_date)), bandwidth_key]
                         # B=refer_df.loc[(refer_df['date'] >= pd.to_datetime(row['refer_start_time'])) & (
                         #             refer_df['date'] <= pd.to_datetime(row['refer_end_time'])), bandwidth_key]
-                        df.loc[(df['date'] >= pd.to_datetime(select_start_date)) & (
-                                df['date'] <= pd.to_datetime(select_end_date)), bandwidth_key] = \
-                            refer_df.loc[(refer_df['date'] >= pd.to_datetime(row['refer_start_time'])) & (
-                                    refer_df['date'] <= pd.to_datetime(row['refer_end_time'])), bandwidth_key].values
+                        if (pd.to_datetime(select_start_date)-pd.to_datetime(select_end_date))==(pd.to_datetime(row['refer_start_time'])-pd.to_datetime(row['refer_end_time'])) and maxtime>pd.to_datetime(select_end_date) and mintime<pd.to_datetime(select_start_date):
+                            df.loc[(df['date'] >= pd.to_datetime(select_start_date)) & (
+                                    df['date'] <= pd.to_datetime(select_end_date)), bandwidth_key] = \
+                                refer_df.loc[(refer_df['date'] >= pd.to_datetime(row['refer_start_time'])) & (
+                                        refer_df['date'] <= pd.to_datetime(row['refer_end_time'])), bandwidth_key].values
+                        elif maxtime<pd.to_datetime(select_end_date):
+                            df.loc[(df['date'] >= pd.to_datetime(select_start_date)) & (
+                                    df['date'] <= pd.to_datetime(select_end_date)), bandwidth_key] = \
+                                refer_df.loc[(refer_df['date'] >= pd.to_datetime(row['refer_start_time'])) & (
+                                        refer_df['date'] <= pd.to_datetime(row['refer_start_time'])+(maxtime-pd.to_datetime(select_start_date))), bandwidth_key].values
+                        elif mintime>pd.to_datetime(select_start_date):
+                            df.loc[(df['date'] >= pd.to_datetime(select_start_date)) & (
+                                    df['date'] <= pd.to_datetime(select_end_date)), bandwidth_key] = \
+                                refer_df.loc[(refer_df['date'] >= pd.to_datetime(row['refer_start_time'])) & (
+                                        refer_df['date'] <= pd.to_datetime(row['refer_start_time']) + (
+                                            pd.to_datetime(select_end_date)-mintime)), bandwidth_key].values
+                        else:
+                            #按理来说这种情况应该不会出现
+                            pass
+
         df.to_csv(save_file_path, index=False)
         print("    保存:将异常数据写入原始数据文件，生成包含异常信号的测试数据集:"+str(save_file_path))
 
@@ -410,8 +482,6 @@ def generate_emi_abnormity(abnormal_num,test_signal_record_and_feature_df,start_
 
 
     for time_period in time_periods:
-
-
         # 随机确定频段，带宽
         abnormal_bandwidth = random.randint(bandwidth_low, bandwidth_high)
         if abnormal_bandwidth > len(df_cols):
@@ -480,8 +550,8 @@ def generate_transmission_abnormity(abnormal_num,test_signal_record_and_feature_
             test_signal_record_and_feature_df['start_time'] <= pd.to_datetime(end_date))]
 
     #在采样前检查 abnormal_num 是否合法，并动态调整
-    #abnormal_num = min(abnormal_num, len(select_test_signal_record_and_feature_df))
-
+    abnormal_num = min(abnormal_num, len(select_test_signal_record_and_feature_df))
+    #随机采样
     sampled_df = select_test_signal_record_and_feature_df.sample(n=abnormal_num)
     for index, row in sampled_df.iterrows():
         abnormal = []
@@ -675,6 +745,7 @@ def generate_transmission_abnormity(abnormal_num,test_signal_record_and_feature_
     return  abnormal_transmission_df
     pass
 
+#这个好像已经被弃用了
 def generate_behavior_abnormity(abnormal_num,test_signal_record_and_feature_df,start_and_end_date,df_cols, normal_time_values,normal_power_values, normal_bandwidth_values):
 
     start_date, end_date = start_and_end_date[0], start_and_end_date[1]
@@ -704,7 +775,7 @@ def generate_behavior_abnormity(abnormal_num,test_signal_record_and_feature_df,s
     return  abnormal_behavior_df
     pass
 
-
+#行为异常
 def generate_behavior_abnormity_new(abnormal_num,test_signal_record_and_feature_df,start_and_end_date,df_cols,dataset_parameter):
     # 在采样前检查 abnormal_num 是否合法，并动态调整
     abnormal_num = min(abnormal_num, len(test_signal_record_and_feature_df))
@@ -832,7 +903,7 @@ def generate_behavior_abnormity_new(abnormal_num,test_signal_record_and_feature_
 
 
 
-
+#功率异常
 def generate_power_abnormity(start_date, end_date, power_high_and_low, bandwidth_high_and_low, time_high_and_low,
                              abnormal_num):
     '''
@@ -892,7 +963,7 @@ def generate_power_abnormity(start_date, end_date, power_high_and_low, bandwidth
     return abnormal_power_df
     pass
 
-
+#带宽异常
 def generate_bandwidth_abnormity(start_date, end_date, power_high_and_low, bandwidth_high_and_low, time_high_and_low,
                              abnormal_num):
     '''
@@ -944,7 +1015,7 @@ def generate_bandwidth_abnormity(start_date, end_date, power_high_and_low, bandw
     return abnormal_instance_df
     pass
 
-
+#持续时间异常
 def generate_duration_abnormity(start_date, end_date, power_high_and_low, bandwidth_high_and_low, time_high_and_low,
                              abnormal_num):
     '''
